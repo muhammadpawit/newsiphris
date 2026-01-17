@@ -1190,7 +1190,7 @@
     <script src="{{ asset(config('velzon.theme') . '/js/pages/plugins/lord-icon-2.1.0.js') }}"></script>
     <script src="{{ asset(config('velzon.theme') . '/js/plugins.js') }}"></script>
 
-    @stack('scripts')
+    @yield('scripts')
 
     <!-- App js -->
     <script src="{{ asset(config('velzon.theme') . '/js/app.js') }}"></script>

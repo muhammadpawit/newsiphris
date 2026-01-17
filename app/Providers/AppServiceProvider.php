@@ -12,6 +12,10 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         //
+        $this->app->bind(
+           \Modules\Hris\Repositories\StaffRepositoryInterface::class, 
+            \Modules\Hris\Repositories\StaffRepository::class
+        );
     }
 
     /**

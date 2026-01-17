@@ -3,10 +3,19 @@
 namespace Modules\Hris\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Modules\Hris\Repositories\StaffRepositoryInterface;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
+    protected $staffRepo;
+
+    public function __construct(StaffRepositoryInterface $staffRepo)
+    {
+        $this->staffRepo = $staffRepo;
+    }
+
+    
     /**
      * Display a listing of the resource.
      */
@@ -14,6 +23,10 @@ class AdminController extends Controller
     {
         $data =[];
         $data['title'] = "HRIS Admin Dashboard";
+        $rekap = $this->staffRepo->getStaffCountByAcademicType();
+        $data['chartLabels'] = $rekap->pluck('kategori_akademik')->toArray();
+        $data['chartSeries'] = $rekap->pluck('jumlah_staff')->toArray();
+        $data['staffCountByAcademicType'] = $rekap;
         return view('welcome', $data);
     }
 
