@@ -113,6 +113,12 @@
                                 Daftar Role
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('hris.daftar-permission.index') }}" 
+                               class="nav-link {{ request()->routeIs('hris.daftar-permission.*') ? 'active' : '' }}">
+                                Daftar Permission
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </li>
