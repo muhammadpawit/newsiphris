@@ -16,6 +16,7 @@
                     </div>
 @endsection
 @section('scripts')
+    @include('layouts.partials.loader')
     @include('layouts.partials.apexchart')
     <script>
         var options = {

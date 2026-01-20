@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Modul - Universitas Paramadina</title>
+    <title>Gate Modul - Universitas Paramadina</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
@@ -176,7 +176,13 @@
             <div class="module-section">
                 <h5 class="fw-bold mb-4">Daftar Modul</h5>
                 <div class="module-grid">
-                    <div class="module-item" onclick="handleModuleClick('SIM Akademik', 'akademik', this)">
+                    @foreach ($modules as $item)
+                        <div class="module-item" onclick="handleModuleClick('{{ $item->title }}', '{{ $item->url }}', this, '{{ $item->deskripsi }}')">
+                            <i class="{{ $item->icon }} module-icon icon-{{ $item->color ?? 'blue' }}"></i>
+                            <div class="fw-bold fs-13">{{ $item->title }}</div>
+                        </div>
+                    @endforeach
+                    {{-- <div class="module-item" onclick="handleModuleClick('SIM Akademik', 'akademik', this)">
                         <i class="ri-book-read-fill module-icon icon-blue"></i>
                         <div class="fw-bold fs-13">SIM Akademik</div>
                     </div>
@@ -195,7 +201,7 @@
                     <div class="module-item" onclick="handleModuleClick('CBT AI', 'cbt', this)">
                         <i class="ri-computer-line module-icon text-secondary"></i>
                         <div class="fw-bold fs-13">CBT AI</div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
 
@@ -233,7 +239,7 @@
     // Ganti bagian <script> lama dengan ini
     const roleModalMobile = new bootstrap.Modal(document.getElementById('roleModalMobile'));
 
-    async function handleModuleClick(moduleName, moduleType, element) {
+    async function handleModuleClick(moduleName, moduleType, element,modulDeskripsi) {
         // 1. Highlight active module
         document.querySelectorAll('.module-item').forEach(item => item.classList.remove('active'));
         element.classList.add('active');
@@ -249,7 +255,7 @@
         
         if (window.innerWidth >= 768) {
             document.getElementById('roleSectionDesktop').style.display = 'block';
-            document.getElementById('selectedModuleNameDesktop').innerText = moduleName;
+            document.getElementById('selectedModuleNameDesktop').innerText = moduleName +' ('+modulDeskripsi+')';
             document.getElementById('roleListDesktop').innerHTML = loaderHtml;
         }
 

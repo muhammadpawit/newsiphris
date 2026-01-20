@@ -20,10 +20,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth','role:aksesaplikasi'])
     ->group(function () {
-        Route::get('gate-module', function () {
-            return view('portal');
-        })->name('gate');
-
+        Route::get('gate-module', [GoogleController::class, 'gate_module'])->name('gate');
         Route::get('/roles/{moduleType}', [GoogleController::class, 'getRoles'])->name('roles');
 });
 

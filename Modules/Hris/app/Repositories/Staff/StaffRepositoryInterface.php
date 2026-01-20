@@ -1,5 +1,5 @@
 <?php
-namespace Modules\Hris\Repositories;
+namespace Modules\Hris\Repositories\Staff;
 interface StaffRepositoryInterface
 {
     /**

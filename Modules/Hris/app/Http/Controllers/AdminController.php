@@ -3,8 +3,9 @@
 namespace Modules\Hris\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Modules\Hris\Repositories\StaffRepositoryInterface;
+
 use Illuminate\Http\Request;
+use Modules\Hris\Repositories\Staff\StaffRepositoryInterface;
 
 class AdminController extends Controller
 {
@@ -27,7 +28,7 @@ class AdminController extends Controller
         $data['chartLabels'] = $rekap->pluck('kategori_akademik')->toArray();
         $data['chartSeries'] = $rekap->pluck('jumlah_staff')->toArray();
         $data['staffCountByAcademicType'] = $rekap;
-        return view('welcome', $data);
+        return view('hris::dashboard', $data);
     }
 
     /**
