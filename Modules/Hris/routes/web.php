@@ -3,22 +3,38 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Hris\Http\Controllers\AdminController;
 use Modules\Hris\Http\Controllers\DaftarModulController;
+use Modules\Hris\Http\Controllers\RoleController;
 
 Route::middleware(['auth','role:superadmin|superadminhris|adminhris'])->name('hris.')->prefix('hris')->group(function() {
     Route::get('/',[AdminController::class, 'index'])->name('index');
+    Route::middleware(['auth'])->prefix('module')->group(function() {
+        // Group Daftar Module
+        Route::name('daftar-module.')->prefix('daftar-module')->group(function() {
+            Route::get('/', [DaftarModulController::class, 'index'])->name('index');
+            Route::get('export-excel', [DaftarModulController::class, 'exportExcel'])->name('excel');
+            Route::get('export-pdf', [DaftarModulController::class, 'exportPdf'])->name('pdf');
+            Route::get('create', [DaftarModulController::class, 'create'])->name('create');
+            Route::post('store', [DaftarModulController::class, 'store'])->name('store');
+            
+            // Route dengan parameter diletakkan di bawah
+            Route::get('show/{id}', [DaftarModulController::class, 'show'])->name('show');
+            Route::get('{id}/edit', [DaftarModulController::class, 'edit'])->name('edit');
+            Route::put('{id}', [DaftarModulController::class, 'update'])->name('update');
+            Route::delete('{id}', [DaftarModulController::class, 'destroy'])->name('destroy');
+        });
 
-    Route::middleware(['auth'])->name('daftar-module.')->prefix('module')->group(function() {
-        // 1. Letakkan Route Statis (tanpa {id}) di paling atas
-        Route::get('daftar-module', [DaftarModulController::class, 'index'])->name('index');
-        Route::get('daftar-module/export-excel', [DaftarModulController::class, 'exportExcel'])->name('excel');
-        Route::get('daftar-module/export-pdf', [DaftarModulController::class, 'exportPdf'])->name('pdf');
-        Route::get('daftar-module-create', [DaftarModulController::class, 'create'])->name('create');
-        Route::post('daftar-module-store', [DaftarModulController::class, 'store'])->name('store');
+        // Group Role
+        Route::name('daftar-role.')->prefix('daftar-role')->group(function() {
+            Route::get('/', [RoleController::class, 'index'])->name('index');
+            Route::get('export-excel', [RoleController::class, 'exportExcel'])->name('excel');
+            Route::get('export-pdf', [RoleController::class, 'exportPdf'])->name('pdf');
+            Route::get('create', [RoleController::class, 'create'])->name('create');
+            Route::post('store', [RoleController::class, 'store'])->name('store');
 
-        // 2. Letakkan Route dengan Parameter {id} di bawah
-        Route::get('daftar-module-show/{id}', [DaftarModulController::class, 'show'])->name('show');
-        Route::get('daftar-module/{id}', [DaftarModulController::class, 'edit'])->name('edit'); // Ini yang sebelumnya "memakan" route excel
-        Route::put('daftar-module/{id}', [DaftarModulController::class, 'update'])->name('update');
-        Route::delete('daftar-module-destroy/{id}', [DaftarModulController::class, 'destroy'])->name('destroy');
+            Route::get('show/{id}', [RoleController::class, 'show'])->name('show');
+            Route::get('{id}/edit', [RoleController::class, 'edit'])->name('edit');
+            Route::put('{id}', [RoleController::class, 'update'])->name('update');
+            Route::delete('{id}', [RoleController::class, 'destroy'])->name('destroy');
+        });
     });
 });

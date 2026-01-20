@@ -2,32 +2,32 @@
 
 namespace Modules\Hris\Http\Controllers;
 
-use App\Exports\ModulExport;
+use App\Exports\RoleExport;
 use App\Helpers\DataTableHelper;
 use App\Http\Controllers\Controller;
-use App\Models\ModulAplikasiModel;
+use App\Models\Role;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-use Modules\Hris\Repositories\Module\ModulRepositoryInterface;
+use Modules\Hris\Repositories\Role\RoleRepositoryInterface;
 use Yajra\DataTables\DataTables;
 
-class DaftarModulController extends Controller
+class RoleController extends Controller
 {
     protected $modulRepo;
     protected $model;
     protected $viewPath;
 
-    public function __construct(ModulRepositoryInterface $modulRepo)
+    public function __construct(RoleRepositoryInterface $modulRepo)
     {
         $this->modulRepo = $modulRepo;
-        $this->model     = ModulAplikasiModel::class;
-        $this->viewPath  = 'hris::daftar-module.page';
+        $this->model     = Role::class;
+        $this->viewPath  = 'hris::daftar-role.page';
     }
 
     public function index(Request $request)
     {
-        $data['title'] = 'Daftar Module Aplikasi';
+        $data['title'] = 'Daftar Role';
         
         if ($request->ajax()) {
             $query = $this->modulRepo->getQuery(); 
@@ -43,7 +43,7 @@ class DaftarModulController extends Controller
                 })
                 ->addColumn('action', function($row){
                     // Menggunakan Helper Action Buttons
-                    return DataTableHelper::gridButtons($row->id, $row->title, 'hris.daftar-module');
+                    return DataTableHelper::gridButtons($row->id, $row->title, 'hris.daftar-role');
                 })
                 ->rawColumns(['action', 'status'])
                 ->make(true);
@@ -60,12 +60,7 @@ class DaftarModulController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'url'   => 'required|string|unique:modul_aplikasi,url',
-            'icon'  => 'nullable|string|max:100',
-            'color' => 'nullable|string|max:50',
-            'deskripsi' => 'nullable|string',
-            'status' => 'required|in:development,active,inactive'
+            'name' => 'required|string|max:255',
         ]);
 
         try {
@@ -99,16 +94,13 @@ class DaftarModulController extends Controller
     public function edit($id)
     {
         $data['module'] = $this->modulRepo->find($id);
-        return view('hris::daftar-module.page.edit', $data);
+        return view("{$this->viewPath}.edit", $data);
     }
 
     public function update(Request $request, $id) 
     {
         $validated = $request->validate([
-            'title'  => 'required|string|max:255',
-            'url'    => 'required|string|unique:modul_aplikasi,url,' . $id,
-            'status' => 'required|in:development,active,inactive',
-            'icon'   => 'nullable|string|max:100',
+            'name' => 'required|string|max:255',
         ]);
 
         try {
@@ -162,8 +154,8 @@ class DaftarModulController extends Controller
     $search = $request->get('search');
 
     return Excel::download(
-        new ModulExport($this->modulRepo, $search), 
-        'daftar-module-' . date('Ymd') . '.xlsx'
+        new RoleExport($this->modulRepo, $search), 
+        'daftar-role-' . date('Ymd') . '.xlsx'
     );
 }
 
@@ -179,8 +171,8 @@ public function exportPdf(Request $request)
     if ($request->filled('search')) {
         $search = $request->get('search');
         $query->where(function($q) use ($search) {
-            $q->where($this->model .'.title', 'like', "%{$search}%")
-              ->orWhere($this->model .'.url', 'like', "%{$search}%");
+            $q->where('newhris_roles.name', 'like', "%{$search}%")
+              ->orWhere('newhris_roles.guard', 'like', "%{$search}%");
         });
     }
 
@@ -188,10 +180,9 @@ public function exportPdf(Request $request)
     $items = $query->get();
 
     // 5. Generate PDF
-    $pdf = Pdf::loadView("{$this->viewPath}".'.pdf', compact('items'));
+    $pdf = Pdf::loadView("{$this->viewPath}.pdf", compact('items'));
     $pdf->setPaper('a4', 'landscape');
     
-    return $pdf->download('daftar-module-' . date('Ymd') . '.pdf');
+    return $pdf->download('daftar-role-' . date('Ymd') . '.pdf');
 }
-
 }

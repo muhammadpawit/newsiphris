@@ -5,26 +5,7 @@
             <li class="nav-item">
                 <a href="{{ route('hris.index') }}" class="nav-link {{ request()->is('hris') ? 'active' : '' }}"><i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Dashboards</span></a>
             </li>
-            {{-- <li class="nav-item">
-                <a class="nav-link menu-link {{ request()->is('dashboard*') ? 'active' : '' }}" 
-                   href="#sidebarDashboards" 
-                   data-bs-toggle="collapse" 
-                   role="button" 
-                   aria-expanded="{{ request()->is('dashboard*') ? 'true' : 'false' }}" 
-                   aria-controls="sidebarDashboards">
-                    <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Dashboards</span>
-                </a>
-                <div class="collapse menu-dropdown {{ request()->is('dashboard*') ? 'show' : '' }}" id="sidebarDashboards">
-                    <ul class="nav nav-sm flex-column">
-                        <li class="nav-item">
-                            <a href="/dashboard-analytics" class="nav-link {{ request()->is('dashboard-analytics') ? 'active' : '' }}"> Analytics </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/dashboard-crm" class="nav-link {{ request()->is('dashboard-crm') ? 'active' : '' }}"> CRM </a>
-                        </li>
-                    </ul>
-                </div>
-            </li> --}}
+            
 
             <li class="nav-item">
                 <a class="nav-link menu-link {{ request()->is('master*') ? 'active' : '' }}" 
@@ -124,6 +105,12 @@
                             <a href="{{ route('hris.daftar-module.index') }}" 
                                class="nav-link {{ request()->routeIs('hris.daftar-module.*') ? 'active' : '' }}">
                                 Daftar Module
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('hris.daftar-role.index') }}" 
+                               class="nav-link {{ request()->routeIs('hris.daftar-role.*') ? 'active' : '' }}">
+                                Daftar Role
                             </a>
                         </li>
                     </ul>
