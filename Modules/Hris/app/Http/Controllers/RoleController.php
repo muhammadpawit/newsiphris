@@ -62,8 +62,10 @@ class RoleController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
         ]);
-
+        
         try {
+            $validated['title'] = $request->name;
+            $validated['slug'] = str_replace(' ', '-', strtolower($request->name));
             $this->modulRepo->store($validated);
             return response()->json([
                 'success' => true,

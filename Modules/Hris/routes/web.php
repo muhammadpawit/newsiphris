@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Hris\Http\Controllers\AdminController;
 use Modules\Hris\Http\Controllers\DaftarModulController;
+use Modules\Hris\Http\Controllers\MenuAksesController;
 use Modules\Hris\Http\Controllers\PermissionController;
 use Modules\Hris\Http\Controllers\RoleController;
 use Modules\Hris\Http\Controllers\UserController;
@@ -65,6 +66,19 @@ Route::middleware(['auth','role:superadmin|superadminhris|adminhris'])->name('hr
             Route::get('{id}/edit', [UserController::class, 'edit'])->name('edit');
             Route::put('{id}', [UserController::class, 'update'])->name('update');
             Route::delete('{id}', [UserController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::name('daftar-menu.')->prefix('daftar-menu')->group(function() {
+            Route::get('/', [MenuAksesController::class, 'index'])->name('index');
+            Route::get('export-excel', [MenuAksesController::class, 'exportExcel'])->name('excel');
+            Route::get('export-pdf', [MenuAksesController::class, 'exportPdf'])->name('pdf');
+            Route::get('create', [MenuAksesController::class, 'create'])->name('create');
+            Route::post('store', [MenuAksesController::class, 'store'])->name('store');
+
+            Route::get('show/{id}', [MenuAksesController::class, 'show'])->name('show');
+            Route::get('{id}/edit', [MenuAksesController::class, 'edit'])->name('edit');
+            Route::put('{id}', [MenuAksesController::class, 'update'])->name('update');
+            Route::delete('{id}', [MenuAksesController::class, 'destroy'])->name('destroy');
         });
 
 

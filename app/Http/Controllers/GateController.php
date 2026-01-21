@@ -18,7 +18,7 @@ class GateController extends Controller
         return [
                 'title' => $role->title, // Contoh: "SDM Administrator"
                 'sub'   => 'Paramadina',  // Contoh: "Pusat Kepegawaian"
-                'url'   => $moduleType,     // Contoh: "/hris/admin"
+                'url'   => $moduleType.'/'.$role->slug,     // Contoh: "/hris/admin"
             ];
         })->toArray();
         return response()->json($hrisMenus);

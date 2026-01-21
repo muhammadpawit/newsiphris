@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('newhris_roles', function (Blueprint $table) {
             //
             $table->string('title')->nullable()->after('name');
-            $table->string('deskripsi')->nullable()->after('title');
+            $table->string('slug')->nullable()->after('title');
         });
     }
 
@@ -26,7 +26,7 @@ return new class extends Migration
         Schema::table('newhris_roles', function (Blueprint $table) {
             //
             $table->dropColumn('title');
-            $table->dropColumn('deskripsi');
+            $table->dropColumn('slug');
         });
     }
 };

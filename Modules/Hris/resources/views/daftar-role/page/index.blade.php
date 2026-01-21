@@ -15,7 +15,7 @@
                             <th style="width: 50px;">No.</th>
                             <th>Nama Role</th>
                             <th>Guard</th>
-                            <th>Deskripsi</th>
+                            <th>Slug</th>
                             <th style="width: 150px;">Aksi</th>
                         </tr>
                     </thead>

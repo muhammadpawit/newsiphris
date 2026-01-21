@@ -15,7 +15,7 @@ $(function () {
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
             { data: 'title', name: 'title' },
             { data: 'guard_name', name: 'guard_name' }, // Kolom 2
-            { data: 'deskripsi', name: 'deskripsi' },
+            { data: 'slug', name: 'slug' },
             { 
                 data: 'action', // Kolom 3 (yang menyebabkan error jika kosong)
                 name: 'action', 
