@@ -13,8 +13,9 @@ $(function () {
         ajax: "{{ route('hris.daftar-role.index') }}",
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-            { data: 'name', name: 'name' },
+            { data: 'title', name: 'title' },
             { data: 'guard_name', name: 'guard_name' }, // Kolom 2
+            { data: 'deskripsi', name: 'deskripsi' },
             { 
                 data: 'action', // Kolom 3 (yang menyebabkan error jika kosong)
                 name: 'action', 

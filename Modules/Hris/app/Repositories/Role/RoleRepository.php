@@ -16,7 +16,7 @@ class RoleRepository implements RoleRepositoryInterface
     public function getQuery()
     {
         // Method ini yang akan dipanggil oleh DataTables di Controller
-        return $this->model->select(['id', 'name','guard_name', 'created_at']);
+        return $this->model->select(['*']);
     }
 
     public function find($id)

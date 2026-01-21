@@ -123,12 +123,11 @@ class RoleController extends Controller
             ], 404);
         }
 
-        // 2. Cek apakah statusnya 'tidak aktif'
-        // Sesuaikan string 'tidak aktif' dengan value yang Anda simpan di database
-        if ($module->status !== 'tidak aktif') {
+        
+        if ($module && in_array($module->name, ['administrator', 'superadmin'])) {
             return response()->json([
                 'success' => false, 
-                'message' => 'Gagal! Hanya module dengan status Tidak Aktif yang dapat dihapus.'
+                'message' => 'Gagal! Role ini tidak dapat dihapus.'
             ], 422); // Error 422: Unprocessable Entity
         }
 
