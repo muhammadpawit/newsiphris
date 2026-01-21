@@ -5,6 +5,7 @@ use Modules\Hris\Http\Controllers\AdminController;
 use Modules\Hris\Http\Controllers\DaftarModulController;
 use Modules\Hris\Http\Controllers\PermissionController;
 use Modules\Hris\Http\Controllers\RoleController;
+use Modules\Hris\Http\Controllers\UserController;
 
 Route::middleware(['auth','role:superadmin|superadminhris|adminhris'])->name('hris.')->prefix('hris')->group(function() {
     Route::get('/',[AdminController::class, 'index'])->name('index');
@@ -50,6 +51,20 @@ Route::middleware(['auth','role:superadmin|superadminhris|adminhris'])->name('hr
             Route::get('{id}/edit', [PermissionController::class, 'edit'])->name('edit');
             Route::put('{id}', [PermissionController::class, 'update'])->name('update');
             Route::delete('{id}', [PermissionController::class, 'destroy'])->name('destroy');
+        });
+
+        // Group User
+        Route::name('daftar-user.')->prefix('daftar-user')->group(function() {
+            Route::get('/', [UserController::class, 'index'])->name('index');
+            Route::get('export-excel', [UserController::class, 'exportExcel'])->name('excel');
+            Route::get('export-pdf', [UserController::class, 'exportPdf'])->name('pdf');
+            Route::get('create', [UserController::class, 'create'])->name('create');
+            Route::post('store', [UserController::class, 'store'])->name('store');
+
+            Route::get('show/{id}', [UserController::class, 'show'])->name('show');
+            Route::get('{id}/edit', [UserController::class, 'edit'])->name('edit');
+            Route::put('{id}', [UserController::class, 'update'])->name('update');
+            Route::delete('{id}', [UserController::class, 'destroy'])->name('destroy');
         });
 
 

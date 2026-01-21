@@ -18,7 +18,7 @@
     <link href="{{ asset(config('velzon.theme') . '/css/app.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset(config('velzon.theme') . '/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
 
-    @stack('styles')
+    @yield('styles')
 
     <style>
         /* Menyembunyikan wrapper utama sampai CSS termuat untuk mencegah FOUC */

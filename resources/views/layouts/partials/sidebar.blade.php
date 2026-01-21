@@ -119,6 +119,12 @@
                                 Daftar Permission
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('hris.daftar-user.index') }}" 
+                               class="nav-link {{ request()->routeIs('hris.daftar-user.*') ? 'active' : '' }}">
+                                Daftar User
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </li>
