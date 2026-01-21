@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\GateController;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +21,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth','role:aksesaplikasi'])
     ->group(function () {
-        Route::get('gate-module', [GoogleController::class, 'gate_module'])->name('gate');
-        Route::get('/roles/{moduleType}', [GoogleController::class, 'getRoles'])->name('roles');
+        Route::get('gate-module', [GateController::class, 'gate_module'])->name('gate');
+        Route::get('/roles/{moduleType}', [GateController::class, 'getRoles'])->name('roles');
 });
 
