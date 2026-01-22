@@ -28,9 +28,12 @@ class RoleController extends Controller
     public function index(Request $request)
     {
         $data['title'] = 'Daftar Role';
-        
+        // Mengambil semua modul aplikasi untuk pilihan di modal Select2
+        $data['modules_list'] = \App\Models\ModulAplikasiModel::all(); 
+
         if ($request->ajax()) {
-            $query = $this->modulRepo->getQuery(); 
+            // Tambahkan with('modules') agar data relasi muncul saat Edit (Poin 2)
+            $query = $this->modulRepo->getQuery()->with('modules'); 
 
             return DataTables::of($query)
                 ->addIndexColumn()
@@ -38,18 +41,16 @@ class RoleController extends Controller
                     DataTableHelper::applySmartFilters($query, $request, $this->model);
                 }, true) 
                 ->editColumn('status', function($row) {
-                    // Menggunakan Helper Status Badge
                     return DataTableHelper::statusBadge($row->status);
                 })
                 ->addColumn('action', function($row){
-                    // Menggunakan Helper Action Buttons
-                    return DataTableHelper::gridButtons($row->id, $row->title, 'hris.daftar-role');
+                    return DataTableHelper::gridButtons($row->id, $row->name, 'hris.daftar-role');
                 })
                 ->rawColumns(['action', 'status'])
                 ->make(true);
         }
         
-        return view("{$this->viewPath}.index",$data);
+        return view("{$this->viewPath}.index", $data);
     }
 
     public function create()
@@ -61,15 +62,24 @@ class RoleController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'modules' => 'nullable|array', // Validasi input modules (Poin 2)
         ]);
         
         try {
             $validated['title'] = $request->name;
             $validated['slug'] = str_replace(' ', '-', strtolower($request->name));
-            $this->modulRepo->store($validated);
+            
+            // Simpan Role
+            $role = $this->modulRepo->store($validated);
+            
+            // Simpan relasi Many-to-Many ke Modul (Poin 2)
+            if ($request->has('modules')) {
+                $role->modules()->sync($request->modules);
+            }
+
             return response()->json([
                 'success' => true,
-                'message' => 'Data module berhasil ditambahkan!'
+                'message' => 'Data role dan akses modul berhasil ditambahkan!'
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -101,13 +111,20 @@ class RoleController extends Controller
 
     public function update(Request $request, $id) 
     {
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
+            'modules' => 'nullable|array', // Validasi input modules (Poin 2)
         ]);
 
         try {
-            $this->modulRepo->update($id, $request->all());
-            return response()->json(['success' => true, 'message' => 'Module berhasil diperbarui.']);
+            // Update data dasar role
+            $role = $this->modulRepo->update($id, $request->all());
+
+            // Update relasi Many-to-Many ke Modul (Poin 2)
+            // Jika modules kosong, sync([]) akan menghapus semua akses modul role tersebut
+            $role->modules()->sync($request->modules ?? []);
+
+            return response()->json(['success' => true, 'message' => 'Role berhasil diperbarui.']);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Gagal: ' . $e->getMessage()], 500);
         }

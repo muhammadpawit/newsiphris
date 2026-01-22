@@ -101,19 +101,14 @@ class MenuAksesController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
-    {
-        try {
-            $menu = $this->modulRepo->update($id, $request->all());
-
-            // Update relasi di tabel pivot newhris_menu_role
-            $menu->roles()->sync($request->roles ?? []);
-
-            Cache::flush(); // Bersihkan cache agar perubahan langsung muncul di sidebar
-
-            return response()->json(['success' => true, 'message' => 'Konfigurasi menu berhasil diperbarui']);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+    public function update(Request $request, $id) {
+        $menu = NewhrisMenu::findOrFail($id);
+        // Sinkronkan role yang dipilih
+        $menu->roles()->sync($request->roles); 
+        
+        // PENTING: Hapus cache role yang bersangkutan agar sidebar terupdate
+        foreach($request->roles as $roleId) {
+            Cache::forget('sidebar_menus_role_' . $roleId);
         }
     }
 }

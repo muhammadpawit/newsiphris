@@ -292,7 +292,7 @@
         if (roles.length === 0) return '<p class="text-center text-muted">Tidak ada role tersedia.</p>';
         
         return roles.map(role => `
-            <a href="${role.url}" class="role-card">
+            <a href="/set-active-role/${role.id}/${role.modul_id}" class="role-card">
                 <div class="role-title">${role.title}</div>
                 <div class="role-sub">${role.sub}</div>
             </a>

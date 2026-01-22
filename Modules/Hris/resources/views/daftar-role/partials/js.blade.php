@@ -101,32 +101,45 @@ function showDetail(id) {
     });
 }
 
+$(document).ready(function() {
+    // Inisialisasi Select2
+    $('#modules_select').select2({
+        placeholder: "Pilih Modul",
+        allowClear: true,
+        dropdownParent: $('#showModal') // Agar select2 tampil benar di dalam modal
+    });
+});
 // Fungsi Switch Mode ke Tambah
 function addMode() {
-    $('#modal-title').text('Tambah Module');
-    $('#btn-save').show(); // Tampilkan tombol simpan
-    $('#form-module input').prop('readonly', false); // Aktifkan input
+    $('#modal-title').text('Tambah Role');
+    $('#btn-save').show();
+    $('#form-module input').prop('readonly', false);
     $('#form-module')[0].reset();
+    $('#modules_select').val(null).trigger('change'); // Reset select2
     $('#module_id').val('');
     $('#showModal').modal('show');
 }
 
 // Fungsi Edit (Dipanggil dari kolom Action DataTable)
 function editData(id) {
-    $('#global-loader').css('display', 'flex');
-
-    $.get("{{ route('hris.daftar-module.show', ':id') }}".replace(':id', id), function(response) {
-        $('#global-loader').fadeOut('fast');
+    Loader.show();
+    $.get("{{ route('hris.daftar-role.show', ':id') }}".replace(':id', id), function(response) {
+        Loader.hide();
         if(response.success) {
             let data = response.data;
-            
-            $('#modal-title').text('Edit Module');
-            $('#btn-save').show(); // Tampilkan tombol simpan
-            $('#form-module input').prop('readonly', false); // Aktifkan input
+            $('#modal-title').text('Edit Role');
+            $('#btn-save').show();
+            $('#form-module input').prop('readonly', false);
             
             $('#module_id').val(data.id);
-            $('#name').val(data.name);
-            $('#guard_name').val(data.guard_name);
+            $('#title').val(data.name);
+            
+            // Logic mengisi Select2 dengan data modul dari relasi
+            if (data.modules) {
+                let moduleIds = data.modules.map(m => m.id);
+                $('#modules_select').val(moduleIds).trigger('change');
+            }
+
             $('#showModal').modal('show');
         }
     });

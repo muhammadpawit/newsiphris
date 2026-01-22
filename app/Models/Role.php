@@ -17,4 +17,10 @@ class Role extends SpatieRole
         'created_at',
         'updated_at',  
     ];
+
+    public function modules()
+    {
+        // Parameter: ModelTarget, NamaTabelPivot, FK_di_pivot_untuk_Role, FK_di_pivot_untuk_Modul
+        return $this->belongsToMany(ModulAplikasiModel::class, 'modul_role', 'role_id', 'modul_id');
+    }
 }

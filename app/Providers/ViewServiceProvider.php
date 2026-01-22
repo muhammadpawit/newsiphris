@@ -10,48 +10,50 @@ use Illuminate\Support\Facades\Auth;
 
 class ViewServiceProvider extends ServiceProvider
 {
-    public function register(): void
-    {
-        //
-    }
+    
 
-    public function boot(): void
-    {
-        View::composer('layouts.partials.sidebar', function ($view) {
-            // Pastikan user sudah login
-            if (Auth::check()) {
-                $user = Auth::user();
-                $roleIds = $user->roles->pluck('id')->sort()->implode('-');
+public function boot(): void
+{
+    View::composer('layouts.partials.sidebar', function ($view) {
+        if (Auth::check() && session()->has('active_role_id')) {
+            
+            $user = Auth::user();
+            $activeRoleId = session('active_role_id'); 
+            
+            // KUNCI: Key cache harus menyertakan ID role aktif
+            $cacheKey = 'sidebar_menus_role_' . $activeRoleId;
+
+            // Debug sementara: Uncomment baris di bawah ini untuk mematikan cache saat testing
+            // Cache::forget($cacheKey); 
+
+            $menus = Cache::rememberForever($cacheKey, function () use ($user, $activeRoleId) {
                 
-                // Nama cache dibuat unik per kombinasi role user
-                // Contoh: sidebar_menus_role_1-2 (untuk user dengan role ID 1 dan 2)
-                $cacheKey = 'sidebar_menus_role_' . ($roleIds ?: 'guest');
+                $isSuperAdmin = $user->hasRole('superadmin');
 
-                $menus = Cache::rememberForever($cacheKey, function () use ($user) {
-                    $query = NewhrisMenu::with(['children' => function ($q) use ($user) {
-                        // Filter sub-menu berdasarkan role (kecuali superadmin)
-                        if (!$user->hasRole('superadmin')) {
-                            $q->whereHas('roles', function ($rq) use ($user) {
-                                $rq->whereIn('roles.id', $user->roles->pluck('id'));
-                            });
-                        }
-                        $q->orderBy('order', 'asc');
-                    }, 'children.children']) // Eager load sampai cucu menu
-                    ->whereNull('parent_id')
-                    ->orderBy('order', 'asc');
-
-                    // Filter menu utama berdasarkan role (kecuali superadmin)
-                    if (!$user->hasRole('superadmin')) {
-                        $query->whereHas('roles', function ($q) use ($user) {
-                            $q->whereIn('roles.id', $user->roles->pluck('id'));
+                // 1. Query Dasar
+                $query = NewhrisMenu::with(['children' => function ($q) use ($activeRoleId, $isSuperAdmin) {
+                    if (!$isSuperAdmin) {
+                        $q->whereHas('roles', function ($rq) use ($activeRoleId) {
+                            // Gunakan ID yang spesifik dari session
+                            $rq->where('id', $activeRoleId); 
                         });
                     }
+                    $q->orderBy('order', 'asc');
+                }, 'children.children'])
+                ->whereNull('parent_id');
 
-                    return $query->get();
-                });
+                // 2. Filter Menu Utama (Level 0)
+                if (!$isSuperAdmin) {
+                    $query->whereHas('roles', function ($q) use ($activeRoleId) {
+                        $q->where('id', $activeRoleId);
+                    });
+                }
 
-                $view->with('menus', $menus);
-            }
-        });
-    }
+                return $query->orderBy('order', 'asc')->get();
+            });
+
+            $view->with('menus', $menus);
+        }
+    });
+}
 }

@@ -22,6 +22,7 @@ class AdminController extends Controller
      */
     public function index()
     {
+        // dd(session()->all());
         $data =[];
         $data['title'] = "HRIS Admin Dashboard";
         $rekap = $this->staffRepo->getStaffCountByAcademicType();

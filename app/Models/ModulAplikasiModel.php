@@ -18,4 +18,9 @@ class ModulAplikasiModel extends Model
         'icon',
         'url',
     ];
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'modul_role', 'modul_id', 'role_id');
+    }
 }

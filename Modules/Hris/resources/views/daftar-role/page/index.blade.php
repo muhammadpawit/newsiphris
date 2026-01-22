@@ -27,5 +27,6 @@
 </div>
 @endsection
 @section('scripts')
+@include('layouts.partials.select2')
 @include('hris::daftar-role.partials.js')
 @endsection

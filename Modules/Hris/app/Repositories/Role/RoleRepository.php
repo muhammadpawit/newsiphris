@@ -21,7 +21,7 @@ class RoleRepository implements RoleRepositoryInterface
 
     public function find($id)
     {
-        return $this->model->findOrFail($id);
+        return $this->model->with('modules')->findOrFail($id);
     }
 
     public function store(array $data)

@@ -23,5 +23,7 @@ Route::middleware(['auth','role:aksesaplikasi'])
     ->group(function () {
         Route::get('gate-module', [GateController::class, 'gate_module'])->name('gate');
         Route::get('/roles/{moduleType}', [GateController::class, 'getRoles'])->name('roles');
+        // Route untuk set session
+        Route::get('/set-active-role/{role_id}/{modul_id}', [GateController::class, 'setActiveRole'])->name('set-role');
 });
 

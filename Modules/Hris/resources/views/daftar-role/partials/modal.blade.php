@@ -18,6 +18,17 @@
                                 <input type="text" name="guard_name" id="guard_name" class="form-control" value="web" hidden>
                             </div>
                         </div>
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <label class="form-label">Akses Modul Aplikasi</label>
+                                <select name="modules[]" id="modules_select" class="form-control" multiple="multiple">
+                                    @foreach($modules_list as $modul)
+                                        <option value="{{ $modul->id }}">{{ $modul->title }}</option>
+                                    @endforeach
+                                </select>
+                                <small class="text-muted">Role ini dapat mengakses modul yang dipilih di atas.</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">

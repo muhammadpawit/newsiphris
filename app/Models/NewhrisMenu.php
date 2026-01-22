@@ -22,7 +22,6 @@ class NewhrisMenu extends Model
 
     public function roles()
     {
-        // Pastikan nama tabel pivot sesuai dengan migration Anda (newhris_menu_role)
-        return $this->belongsToMany(\App\Models\Role::class, 'newhris_menu_role', 'menu_id', 'role_id');
+        return $this->belongsToMany(Role::class, 'newhris_menu_role', 'menu_id', 'role_id');
     }
 }
